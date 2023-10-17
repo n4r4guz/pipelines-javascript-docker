@@ -37,3 +37,13 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
+    - task: CmdLine@2
+      displayName: TMAS
+      inputs:
+        script: |
+        curl -s https://cli.artifactscan.cloudone.trendmicro.com/tmas-cli/latest/tmas/cli_Linux_x86_64.tar.gz --output tmas.tar.gz
+        tar -xf tmas.tar.gz
+        export TMAS_API_KEY=$(TMAS_API_KEY)
+        ./tmas --version
+        echo " "
+         ./tmas scan registry:$(containerRegistry)/$(imageRepository):$(tag)
